@@ -235,6 +235,7 @@ code {
   margin: 0;
   padding: 0;
   display: inline-block;
+  padding-bottom: 8px;
 }
 
 .footer-links a {
@@ -260,7 +261,7 @@ code {
 }
 .footer-links-kudos img {
   position: relative;
-  top: 6px;
+  top: 2px;
   margin-left: 2px;
 }
 
@@ -327,6 +328,7 @@ code {
   .footer-links {
     font-size: inherit;
     float: none;
+    mark-after: 10px 20px;
   }
 }
 

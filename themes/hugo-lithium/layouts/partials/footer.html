@@ -24,15 +24,13 @@
          alt="{{ .Site.Params.gmail.alt }}">
           </a>
           </li>
+          </ul>
+          
+           <ul class="footer-links">
           <li>
             <a href="{{ .Site.RSSLink | relURL }}" type="application/rss+xml" target="_blank">RSS feed</a>
           </li>
-          <li>
-          <li>
-            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
-          </li>
-          
-          
+             <li>
           {{ if .File.Path }}
           
 {{ $.Scratch.Set "FilePath" (replace ($.Scratch.Get "FilePath") "\\" "/") }}
@@ -50,6 +48,12 @@
 {{ end }}
 
 {{ end }}
+        </li>
+        </ul>
+        <ul class="footer-links">
+          <li>
+            <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
         </ul>
       </footer>
 
