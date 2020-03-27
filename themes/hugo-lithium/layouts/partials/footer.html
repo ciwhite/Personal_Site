@@ -62,6 +62,9 @@
     {{ partial "footer_highlightjs" . }}
     {{ partial "footer_mathjax" . }}
     {{ template "_internal/google_analytics.html" . }}
+    {{ if .IsPage }}
+  {{ template "_internal/disqus.html" . }}
+{{ end }}
     {{ template "_internal/disqus.html" . }}
   </body>
 </html>

@@ -2,15 +2,17 @@
 title: "Principal Component Analysis in R"
 author: "Cian White"
 date: '2020-03-03'
-output: html_notebook
 slug: PCA
 categories:
   - R
 tags:
   - Principal Component Analysis
   - R Markdown
+output:
+  blogdown::html_page:
+    toc: true #adds table of contents to the post
 ---
-***
+
 ## Prinicpal Component Analysis
 
 I am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is 'wide', there are a lot of columns for the amount of rows of datapoints. A PCA looks for correlations among the columns by searching for vectors (eigenvectors) that correlate stongly with the data in the columns (high eigenvalues). By searchinig for this eigenvectors with high eigenvalues we can hopefully reduce the dimensionality of the dataset.
@@ -33,6 +35,7 @@ Simply put, an eigenvector is a direction, such as "vertical" or "45 degrees", w
 
 
 ### Standardising Variables
+***
 
 If you want to compare different variables that have different units, are very different variances, it is a good idea to first standardise the variables.
 
@@ -80,11 +83,12 @@ Suppose that we did not center. We can relate PCA to directions with highest cov
 Some functions in R that calculate the PCA do not center by default. There might be a good reason to not center (e.g., you centered a large dataset already and you are only looking at a subsample), but in general, you should always center your data when doing a PCA.
 
 ### Constructing a PCA 
+***
 
 The `prcomp` package contains an arguement `scale` which scales the variables used in a PCA, so it is not necessary to manually scale as above.
 
 Loading data, selecting columns to include in PCA and running a scaled and centred PCA.
-```{r}
+```{r warning=FALSE, message=FALSE}
 
 Env_18 <- read.csv("PCA.csv")
 
@@ -130,6 +134,7 @@ $x
 ```
 
 ### Theory Behind PCA Results
+***
 
 This code will calculate the PCA results for variables (i.e. columns): coordinates, cos2, and contributions
 
@@ -137,7 +142,7 @@ This code will calculate the PCA results for variables (i.e. columns): coordinat
 * var.cos2 = var.coord^2
 * var.contrib. The contribution of a variable to a given principal component is (in percentage) : (var.cos2 * 100) / (total cos2 of the component)
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 #helper function
 
 var_coord_func <- function(loadings, comp.sdev){
@@ -169,7 +174,7 @@ This code will calculate PCA results for individuals (i.e. rows)
   + Calculate the square distance between each individual and the PCA center of gravity: d2 = [(var1_ind_i - mean_var1)/sd_var1]^2 + …+ [(var10_ind_i - mean_var10)/sd_var10]^2 + …+..
   + Calculate the cos2 as ind.coord^2/d2
 * Contributions of individuals to the principal components: 100 * (1 / number_of_individuals)*(ind.coord^2 / comp_sdev^2). Note that the sum of all the contributions per column is 100
-```{r}
+```{r warning=FALSE, message=FALSE}
 # Coordinates of individuals
 #::::::::::::::::::::::::::::::::::
 ind.coord <- T.18.pca$x
@@ -202,6 +207,7 @@ head(ind.contrib[, 1:4])
 ```
 
 ### PCA Visualisation
+***
 
 Now it's time to plot the PCA.
 
@@ -210,7 +216,7 @@ we will first look at a package `ggbiplot`.
 You will make a biplot, which includes both the position of each sample in terms of PC1 and PC2 and also will show you how the initial variables map onto this. You will use the `ggbiplot` package, which offers a user-friendly and pretty function to plot biplots. A biplot is a type of plot that will allow you to visualize how the samples relate to one another in our PCA (which samples are similar and which are different) and will simultaneously reveal how each variable contributes to each principal component.
 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(devtools)
 #install_github("vqv/ggbiplot")
 
@@ -228,7 +234,7 @@ ggbiplot(T.18.pca, labels=rownames(T.18))
 
 Many other packages exist for plotting PCAs. Another suite of packages are the `facto` package family, which again works off the `ggplot` functionality
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(factoextra)
 
 #scree plot
@@ -255,7 +261,7 @@ fviz_pca_biplot(T.18.pca, repel = TRUE,
                 )
 ```
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(Factoshiny)
 
 #result <- Factoshiny(T.18)
@@ -274,7 +280,7 @@ Qualitative / categorical variables can be used to color individuals (rows) by g
 ```
 
 Code for extracting data from `Factoextra` package on PCA results
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(factoextra)
 # Eigenvalues
 eig.val <- get_eigenvalue(T.18.pca)
@@ -292,8 +298,9 @@ res.ind <- get_pca_ind(T.18.pca)
 #res.ind$cos2           # Quality of representation 
 ```
 
-***
+
 ### Deciding how many principal components to retain
+***
 
 In order to decide how many principal components should be retained, it is common to summarise the results of a principal components analysis by making a scree plot, which we can do in R using the `screeplot()` function:
 
@@ -317,10 +324,11 @@ summary(T.18.pca)
 ```
 
 ### Interpreting the Results
+***
 
 Now, we can group our variables and see whether groups occupy a similar space in PCA space, indicating that they are correlated with each other. We do this using the groups argument in ggbiplot
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 #creating groups, turning ellipses on
 T.18.pca <- prcomp(T.18, center = TRUE, scale. = TRUE)
 site.groups <- c(rep("a", 3), rep("b", 3),rep("c", 3),rep("d", 3),rep("e", 3),rep("f", 3))
@@ -333,13 +341,14 @@ ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, 
 illustrates that axis three is useful for pulling out groups, such as f, so should include the first three axes as they contain alot of variation.
 
 ### Graphical parameters with ggbiplot
+***
 
 Are also othe variables that can be used to alter the biplots.
 * Can add a circle to the centre of the dataset
 * Can scale the sampples (obs.scale) and the variables (var.scale)
 * Can remove the arrows altogether using var.axes
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 T.18.pca <- prcomp(T.18, center = TRUE, scale. = TRUE)
 ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, circle = TRUE)
 
@@ -358,17 +367,15 @@ As ggbiplot is based on the ggplot function, you can use the same set of graphic
 * Specify the `minimal()` theme, or other themes
 * Move the legend with `theme()`
 
-
-***
-
 ### Multivariate Packages
+***
 
 So far I been using the base `stats` package for conducting PCA. But there are other packagaes out there that are design to facilitate a suite of multivariate analysis. `ade4` is such a package.
 
 Using the package `ade4` for multivariate analysis rather than base stats package. Combining with scree plots and comparing the `ade4` plotting functions to customised plotting using `ggplot` universe of packages
 
 
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(ade4) # multivariate analysis
 T.18.pca <- dudi.pca(T.18, scannf = F, nf = 8)
 
@@ -378,7 +385,7 @@ scatter(T.18.pca)
 ```
 
 Setting up libraries, and basic plot themes
-```{r}
+```{r warning=FALSE, message=FALSE}
 library(grid) # has the viewport function, needed for insetting the scree plot
 library(ggpubr) #for making publication ready plots
 library(ggforce) #for some nice polygons geoms
@@ -421,7 +428,7 @@ myscree <- function(eigs, x=0.8, y=0.1, just=c("left","centre")){
 
 
 Plotting using `geom_mark_ellipse()` function in the `ggforce` package
-```{r}
+```{r warning=FALSE, message=FALSE}
 #set grouping factor for colour, grouping by sites and adding to dataframe
 T.18.pca$li[,1+dim(T.18.pca$li)[2]]=site.groups
 
@@ -463,7 +470,7 @@ myscree(T.18.pca$eig / sum(T.18.pca$eig))
 ```   
 
 Plotting using `geom_encircle()` function in the `ggalt` package
-```{r}
+```{r warning=FALSE}
 ppp + 
   geom_point(data=T.18.pca$li,
              aes(x=Axis1,
@@ -493,6 +500,7 @@ myscree(T.18.pca$eig / sum(T.18.pca$eig))
 ```
 
 ### Predicting using PCA
+***
 
 In this section, we’ll show how to predict the coordinates of supplementary individuals and variables using only the information provided by the previously performed PCA.
 

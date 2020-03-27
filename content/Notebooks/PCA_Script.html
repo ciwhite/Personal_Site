@@ -2,18 +2,34 @@
 title: "Principal Component Analysis in R"
 author: "Cian White"
 date: '2020-03-03'
-output: html_notebook
 slug: PCA
 categories:
   - R
 tags:
   - Principal Component Analysis
   - R Markdown
+output:
+  blogdown::html_page:
+    toc: true #adds table of contents to the post
 ---
 
 
+<div id="TOC">
+<ul>
+<li><a href="#prinicpal-component-analysis">Prinicpal Component Analysis</a><ul>
+<li><a href="#standardising-variables">Standardising Variables</a></li>
+<li><a href="#constructing-a-pca">Constructing a PCA</a></li>
+<li><a href="#theory-behind-pca-results">Theory Behind PCA Results</a></li>
+<li><a href="#pca-visualisation">PCA Visualisation</a></li>
+<li><a href="#deciding-how-many-principal-components-to-retain">Deciding how many principal components to retain</a></li>
+<li><a href="#interpreting-the-results">Interpreting the Results</a></li>
+<li><a href="#graphical-parameters-with-ggbiplot">Graphical parameters with ggbiplot</a></li>
+<li><a href="#multivariate-packages">Multivariate Packages</a></li>
+<li><a href="#predicting-using-pca">Predicting using PCA</a></li>
+</ul></li>
+</ul>
+</div>
 
-<hr />
 <div id="prinicpal-component-analysis" class="section level2">
 <h2>Prinicpal Component Analysis</h2>
 <p>I am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is ‘wide’, there are a lot of columns for the amount of rows of datapoints. A PCA looks for correlations among the columns by searching for vectors (eigenvectors) that correlate stongly with the data in the columns (high eigenvalues). By searchinig for this eigenvectors with high eigenvalues we can hopefully reduce the dimensionality of the dataset.</p>
@@ -36,6 +52,7 @@ tags:
 <p>Simply put, an eigenvector is a direction, such as “vertical” or “45 degrees”, while an eigenvalue is a number telling you how much variance there is in the data in that direction. The eigenvector with the highest eigenvalue is, therefore, the first principal component.</p>
 <div id="standardising-variables" class="section level3">
 <h3>Standardising Variables</h3>
+<hr />
 <p>If you want to compare different variables that have different units, are very different variances, it is a good idea to first standardise the variables.</p>
 <p>Yet, whether you want to standardise or not depends on the question you are asking, see this <a href="https://stats.stackexchange.com/questions/53/pca-on-correlation-or-covariance">stack exchange discussion</a></p>
 <p>If variables are not standardised the first principal component will be dominated by variables which show the largest variance.</p>
@@ -70,6 +87,7 @@ tags:
 </div>
 <div id="constructing-a-pca" class="section level3">
 <h3>Constructing a PCA</h3>
+<hr />
 <p>The <code>prcomp</code> package contains an arguement <code>scale</code> which scales the variables used in a PCA, so it is not necessary to manually scale as above.</p>
 <p>Loading data, selecting columns to include in PCA and running a scaled and centred PCA.</p>
 <pre class="r"><code>Env_18 &lt;- read.csv(&quot;PCA.csv&quot;)
@@ -111,6 +129,7 @@ T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
 </div>
 <div id="theory-behind-pca-results" class="section level3">
 <h3>Theory Behind PCA Results</h3>
+<hr />
 <p>This code will calculate the PCA results for variables (i.e. columns): coordinates, cos2, and contributions</p>
 <ul>
 <li>var.coord = loadings * the component standard deviations</li>
@@ -218,31 +237,18 @@ head(ind.contrib[, 1:4])</code></pre>
 </div>
 <div id="pca-visualisation" class="section level3">
 <h3>PCA Visualisation</h3>
+<hr />
 <p>Now it’s time to plot the PCA.</p>
 <p>we will first look at a package <code>ggbiplot</code>.</p>
 <p>You will make a biplot, which includes both the position of each sample in terms of PC1 and PC2 and also will show you how the initial variables map onto this. You will use the <code>ggbiplot</code> package, which offers a user-friendly and pretty function to plot biplots. A biplot is a type of plot that will allow you to visualize how the samples relate to one another in our PCA (which samples are similar and which are different) and will simultaneously reveal how each variable contributes to each principal component.</p>
-<pre class="r"><code>library(devtools)</code></pre>
-<pre><code>## Loading required package: usethis</code></pre>
-<pre class="r"><code>#install_github(&quot;vqv/ggbiplot&quot;)
+<pre class="r"><code>library(devtools)
+#install_github(&quot;vqv/ggbiplot&quot;)
 
-library(ggbiplot)</code></pre>
-<pre><code>## Loading required package: ggplot2</code></pre>
-<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Loading required package: plyr</code></pre>
-<pre><code>## Loading required package: scales</code></pre>
-<pre><code>## Loading required package: grid</code></pre>
-<pre class="r"><code>library(ggalt)</code></pre>
-<pre><code>## Warning: package &#39;ggalt&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Registered S3 methods overwritten by &#39;ggalt&#39;:
-##   method                  from   
-##   grid.draw.absoluteGrob  ggplot2
-##   grobHeight.absoluteGrob ggplot2
-##   grobWidth.absoluteGrob  ggplot2
-##   grobX.absoluteGrob      ggplot2
-##   grobY.absoluteGrob      ggplot2</code></pre>
-<pre class="r"><code>library(ggforce)</code></pre>
-<pre><code>## Warning: package &#39;ggforce&#39; was built under R version 3.6.3</code></pre>
-<pre class="r"><code>ggbiplot(Env.18.pca)</code></pre>
+library(ggbiplot)
+library(ggalt)
+library(ggforce)
+
+ggbiplot(Env.18.pca)</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <pre class="r"><code>ggbiplot(T.18.pca)</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
@@ -252,10 +258,9 @@ ggbiplot(Env.18.pca, labels=rownames(Env_18))</code></pre>
 <pre class="r"><code>ggbiplot(T.18.pca, labels=rownames(T.18))</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
 <p>Many other packages exist for plotting PCAs. Another suite of packages are the <code>facto</code> package family, which again works off the <code>ggplot</code> functionality</p>
-<pre class="r"><code>library(factoextra)</code></pre>
-<pre><code>## Warning: package &#39;factoextra&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
-<pre class="r"><code>#scree plot
+<pre class="r"><code>library(factoextra)
+
+#scree plot
 fviz_eig(T.18.pca)</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 <pre class="r"><code>#individuals (rows)
@@ -278,15 +283,9 @@ fviz_pca_biplot(T.18.pca, repel = TRUE,
                 col.ind = &quot;#696969&quot;  # Individuals color
                 )</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
-<pre class="r"><code>library(Factoshiny)</code></pre>
-<pre><code>## Warning: package &#39;Factoshiny&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Loading required package: FactoMineR</code></pre>
-<pre><code>## Warning: package &#39;FactoMineR&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Loading required package: shiny</code></pre>
-<pre><code>## Warning: package &#39;shiny&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Loading required package: FactoInvestigate</code></pre>
-<pre><code>## Warning: package &#39;FactoInvestigate&#39; was built under R version 3.6.3</code></pre>
-<pre class="r"><code>#result &lt;- Factoshiny(T.18)</code></pre>
+<pre class="r"><code>library(Factoshiny)
+
+#result &lt;- Factoshiny(T.18)</code></pre>
 <p><em>Supplementary Variables</em></p>
 <p>Qualitative / categorical variables</p>
 <p>Qualitative / categorical variables can be used to color individuals (rows) by groups. The grouping variable should be of same length as the number of active individuals</p>
@@ -324,10 +323,10 @@ res.ind &lt;- get_pca_ind(T.18.pca)
 #res.ind$coord          # Coordinates
 #res.ind$contrib        # Contributions to the PCs
 #res.ind$cos2           # Quality of representation </code></pre>
-<hr />
 </div>
 <div id="deciding-how-many-principal-components-to-retain" class="section level3">
 <h3>Deciding how many principal components to retain</h3>
+<hr />
 <p>In order to decide how many principal components should be retained, it is common to summarise the results of a principal components analysis by making a scree plot, which we can do in R using the <code>screeplot()</code> function:</p>
 <pre class="r"><code>T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
 screeplot(T.18.pca, type=&quot;lines&quot;)</code></pre>
@@ -358,6 +357,7 @@ The most obvious change in slope in the scree plot occurs at component 4, which 
 </div>
 <div id="interpreting-the-results" class="section level3">
 <h3>Interpreting the Results</h3>
+<hr />
 <p>Now, we can group our variables and see whether groups occupy a similar space in PCA space, indicating that they are correlated with each other. We do this using the groups argument in ggbiplot</p>
 <pre class="r"><code>#creating groups, turning ellipses on
 T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
@@ -371,6 +371,7 @@ ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, 
 </div>
 <div id="graphical-parameters-with-ggbiplot" class="section level3">
 <h3>Graphical parameters with ggbiplot</h3>
+<hr />
 <p>Are also othe variables that can be used to alter the biplots.
 * Can add a circle to the centre of the dataset
 * Can scale the sampples (obs.scale) and the variables (var.scale)
@@ -391,19 +392,14 @@ ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, 
 <li>Specify the <code>minimal()</code> theme, or other themes</li>
 <li>Move the legend with <code>theme()</code></li>
 </ul>
-<hr />
 </div>
 <div id="multivariate-packages" class="section level3">
 <h3>Multivariate Packages</h3>
+<hr />
 <p>So far I been using the base <code>stats</code> package for conducting PCA. But there are other packagaes out there that are design to facilitate a suite of multivariate analysis. <code>ade4</code> is such a package.</p>
 <p>Using the package <code>ade4</code> for multivariate analysis rather than base stats package. Combining with scree plots and comparing the <code>ade4</code> plotting functions to customised plotting using <code>ggplot</code> universe of packages</p>
-<pre class="r"><code>library(ade4) # multivariate analysis</code></pre>
-<pre><code>## 
-## Attaching package: &#39;ade4&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:FactoMineR&#39;:
-## 
-##     reconst</code></pre>
-<pre class="r"><code>T.18.pca &lt;- dudi.pca(T.18, scannf = F, nf = 8)
+<pre class="r"><code>library(ade4) # multivariate analysis
+T.18.pca &lt;- dudi.pca(T.18, scannf = F, nf = 8)
 
 #The $co is the coordinates of variables in PCA space. Equivalent to loadings*sdev as calculated in theory section above for prcomp.
 #The $li correspond to the individual, or row, cooridinates 
@@ -411,30 +407,13 @@ scatter(T.18.pca)</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>Setting up libraries, and basic plot themes</p>
 <pre class="r"><code>library(grid) # has the viewport function, needed for insetting the scree plot
-library(ggpubr) #for making publication ready plots</code></pre>
-<pre><code>## Warning: package &#39;ggpubr&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Loading required package: magrittr</code></pre>
-<pre><code>## 
-## Attaching package: &#39;ggpubr&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:plyr&#39;:
-## 
-##     mutate</code></pre>
-<pre class="r"><code>library(ggforce) #for some nice polygons geoms
+library(ggpubr) #for making publication ready plots
+library(ggforce) #for some nice polygons geoms
 library(ggalt) #contains some extra geoms
-library(viridis) #some nice colour palettes</code></pre>
-<pre><code>## Warning: package &#39;viridis&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## Loading required package: viridisLite</code></pre>
-<pre><code>## 
-## Attaching package: &#39;viridis&#39;</code></pre>
-<pre><code>## The following object is masked from &#39;package:scales&#39;:
-## 
-##     viridis_pal</code></pre>
-<pre class="r"><code>library(hrbrthemes) #some nice themes for ggplot</code></pre>
-<pre><code>## Warning: package &#39;hrbrthemes&#39; was built under R version 3.6.3</code></pre>
-<pre><code>## NOTE: Either Arial Narrow or Roboto Condensed fonts are required to use these themes.</code></pre>
-<pre><code>##       Please use hrbrthemes::import_roboto_condensed() to install Roboto Condensed and</code></pre>
-<pre><code>##       if Arial Narrow is not on your system, please see http://bit.ly/arialnarrow</code></pre>
-<pre class="r"><code>### set up a plot we&#39;ll use later
+library(viridis) #some nice colour palettes
+library(hrbrthemes) #some nice themes for ggplot
+
+### set up a plot we&#39;ll use later
 ppp &lt;- ggplot() +
   coord_fixed() + 
   labs(x= paste(&quot;PCA 1 &quot; , &quot;(&quot;, round((T.18.pca$eig[1] / sum(T.18.pca$eig))*100, 1), &quot;% explained var&quot; , &quot;)&quot;, sep = &quot;&quot;),
@@ -498,58 +477,9 @@ ppp +
   
   scale_fill_viridis(discrete=TRUE, guide=FALSE) +
   
-  guides(fill=guide_legend(title=&quot;Sites&quot;))</code></pre>
-<pre><code>## Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
-## which will replace the existing scale.</code></pre>
-<pre><code>## Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family not
-## found in Windows font database
-
-## Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family not
-## found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family not
-## found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-## font family not found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
-<pre class="r"><code>myscree(T.18.pca$eig / sum(T.18.pca$eig))</code></pre>
+  guides(fill=guide_legend(title=&quot;Sites&quot;))
+   
+myscree(T.18.pca$eig / sum(T.18.pca$eig))</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
 <pre class="r"><code>#can place labels whereever on the plot with this function, but it doesn&#39;t stay relative when size of plotting device changes
 #grid.text(label = &quot;text&quot;, x=0.83, y=0.75, rot=270, gp=gpar(fontsize=8, col=&quot;black&quot;))</code></pre>
@@ -577,57 +507,14 @@ ppp +
   
   scale_fill_viridis(discrete=TRUE, guide=FALSE) +
   
-  guides(fill=guide_legend(title=&quot;Sites&quot;))</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
-## font family not found in Windows font database</code></pre>
-<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database
-
-## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
-## family not found in Windows font database</code></pre>
-<pre class="r"><code>myscree(T.18.pca$eig / sum(T.18.pca$eig))</code></pre>
+  guides(fill=guide_legend(title=&quot;Sites&quot;))
+   
+myscree(T.18.pca$eig / sum(T.18.pca$eig))</code></pre>
 <p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 </div>
 <div id="predicting-using-pca" class="section level3">
 <h3>Predicting using PCA</h3>
+<hr />
 <p>In this section, we’ll show how to predict the coordinates of supplementary individuals and variables using only the information provided by the previously performed PCA.</p>
 <p>see <a href="http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/">here</a></p>
 </div>

@@ -1,5 +1,16 @@
 {{ partial "header.html" . }}
 
+<p class="terms">
+  {{ range $i := (slice "categories" "tags") }}
+  {{ with ($.Param $i) }}
+  {{ $i | title }}:
+  {{ range $k := . }}
+  <a href='{{ relURL (print "/" $i "/" $k | urlize) }}'>{{$k}}</a>
+  {{ end }}
+  {{ end }}
+  {{ end }}
+</p>
+
 <main class="content" role="main">
 
   <article class="article">

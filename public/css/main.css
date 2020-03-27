@@ -13,21 +13,23 @@ body {
   -moz-font-feature-settings: "liga" on;
 }
 
-h1,
+h1 {color: #222;
+  overflow: hidden;
+   margin-bottom: 25px;
+}
+
 h2,
 h3,
 h4,
 h5,
 h6 {
   color: #222;
+  overflow: hidden;
+   margin-bottom: 5px;
 }
 
 a {
   outline: none;
-}
-
-code {
-  background-color: rgba(0, 0, 0, 0.04);
 }
 
 .wrapper {
@@ -35,8 +37,13 @@ code {
   position: relative;
 }
 
+code {
+  background-color: rgba(0, 0, 0, 0.04);
+  max-width: calc(100%);
+}
+
 .header {
-  padding: 20px 0;
+  padding: 15px;
   position: relative;
   background: #E3E3DA;
   border-bottom: 1px solid #CBF8DF;
@@ -46,7 +53,7 @@ code {
 .nav {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding-left: 7px;
   text-align: right;
 }
 
@@ -62,45 +69,40 @@ code {
 
 .nav-logo img {
   display: block;
-  max-height: 80px;
+  max-height: 50px;
   width: auto;
   border-radius: 50%;
 }
 
 .nav-links {
-  margin: 0;
-  padding: 0;
-  font-size: 14px;
+  margin: 0px;
+  font-size: 16px;
   list-style: none;
 }
 
 .nav-links li {
   display: inline-block;
-  margin: 0 0 0 15px;
+  margin: 0px;
+  padding: 5px;
 }
 
 .nav-links li:first-child {
   margin-left: 0;
 }
 
-.nav-links a {
+.nav-links li a {
   text-decoration: none;
   color: #111;
 }
 
-.nav-links a:hover {
-  color: #111;
-  background-color: #5EBCF28;
+.nav-links li a:hover {
+  color: #454545;
 }
-
-.nav-links a:hover:not(.active) {background-color: #5EBCF28;}
-  
-.active {background-color: #5EBCF28;}
   
 .nav-link img {
    float: left;
   display: block;
-  max-height: 40px;
+  max-height: 100px;
   width: auto;
   border-radius: 50%;
   margin-top: -11px;
@@ -119,6 +121,15 @@ code {
   font-size: 12px;
   line-height: 1.7;
   color: #333;
+}
+
+  .content img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2px; 
+  margin-bottom: 2px; 
+  max-width: calc(100% - 20px);
 }
 
 .article-title {
@@ -160,8 +171,9 @@ code {
 }
 
 .article-content hr {
-  width: 900px;
-  margin: 50px auto;
+  max-width: calc(100%);
+  margin-top: 0px;
+  margin-bottom: 10px;
   height: 1px;
   overflow: hidden;
   border: none;
@@ -269,19 +281,19 @@ code {
 
 @media (min-width: 600px) {
   .header {
-    padding: 25px 0;
+    padding: 30px;
   }
 
   .nav-logo {
-    margin-top: -13px;
+    margin-top: -18px;
   }
 
   .nav-logo img {
-    max-height: 50px;
+    max-height: 75px;
   }
 
   .nav-links {
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .nav-links li {
@@ -289,7 +301,7 @@ code {
   }
 
   .content {
-    font-size: 19px;
+    font-size: 16px;
     line-height: 1.8;
   }
 

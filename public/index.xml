@@ -37,7 +37,7 @@ Irish COVID 19 Intertactive MapAimTo create a map that tracks the spread of CO
       <pubDate>Tue, 03 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/notebooks/pca/</guid>
-      <description>Prinicpal Component AnalysisI am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is ‘wide’, there are a lot of columns for the amount of rows of datapoints. A PCA looks for correlations among the columns by searching for vectors (eigenvectors) that correlate stongly with the data in the columns (high eigenvalues). By searchinig for this eigenvectors with high eigenvalues we can hopefully reduce the dimensionality of the dataset.</description>
+      <description>Prinicpal Component AnalysisStandardising VariablesConstructing a PCATheory Behind PCA ResultsPCA VisualisationDeciding how many principal components to retainInterpreting the ResultsGraphical parameters with ggbiplotMultivariate PackagesPredicting using PCAPrinicpal Component AnalysisI am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is ‘wide’, there are a lot of columns for the amount of rows of datapoints.</description>
     </item>
     
     <item>

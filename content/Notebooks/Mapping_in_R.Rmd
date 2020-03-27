@@ -10,7 +10,7 @@ tags:
   - R Markdown
 output:
   blogdown::html_page:
-    toc: true
+    toc: true #adds table of contents to the post
 ---
 
 ```{r echo=FALSE}
@@ -46,13 +46,13 @@ Using the `sf` package, standing for simple features. It's a widely compatible s
 I downloaded shapefiles for the Republic of Ireland from the [Central Statistics Office](https://www.cso.ie/en/census/census2011boundaryfiles/), specifically the 	`Census2011_Admin_Counties_generalised20m.zip`. I unzipped to the project I am working at and stored it at this location: `Shapefiles/Counties/ROI_Counties/`. I downloaded the Northern Ireland county shapefile from the Northern Ireland [Open Data Initiative](https://www.opendatani.gov.uk/about). The shapefile can be found [here](https://www.opendatani.gov.uk/dataset/osni-open-data-50k-boundaries-ni-counties)
 
 Creating all ireland shapefile.
-```{r message=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(dplyr)
 library(tidyverse)
 library(sf) #for reading in shapefiles
 ```
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ROI_counties = st_read("Shapefiles/Counties/ROI_Counties/Census2011_Admin_Counties_generalised20m.shp")
 
 NI_counties = st_read("Shapefiles/Counties/NI_Counties/OSNI_Open_Data_50K_Admin_Boundaries_–_Counties.shp")
@@ -100,7 +100,7 @@ I am reading in the Covid data from dataset I created from the data released by 
 A note: I am creating multiple spatial datasets here using the `group_by` and `summarise` functions from `dplyr`. The `sp` package handles spatial data manipulation, and is compatible with `dplyr`. Each time I `group_by`and `summarise` I am creating a new dataset, with aggregated geometries. For example, here I group by county, province, nation and island, and can create plots at each level of grouping. For more on this see [here](https://geocompr.robinlovelace.net/geometric-operations.html#fig:us-regions)
 
 Reading in county, province and national data and joining to shapefiles so it can be mapped.
-```{r message="center"}
+```{r message=FALSE, warning=FALSE}
 #reading in health data and tidying up
 County_data <- as_tibble(read.csv("Data/County.csv")) %>%
   pivot_longer(cols = starts_with("x"), names_to = "Date",
@@ -215,7 +215,7 @@ The `tmap` package is a powerful and flexible map-making package with sensible d
 
 For more see [here](https://geocompr.robinlovelace.net/adv-map.html).
 
-```{r message=FALSE, fig.align="center"}
+```{r message=FALSE, warning=FALSE, fig.align="center"}
 library(tmap)
 tmap_mode("plot")
 
@@ -301,7 +301,7 @@ During installation you must check yes to downloading the `converter` function. 
 
 Finally, you need to include the Image Magick application in your PATH. The code `Sys.setenv(PATH = paste("C:\\Program Files\\ImageMagick-7.0.10-Q16", Sys.getenv("PATH"), sep=";"))` adds Image Magick to the PATH, but you will need to check where Image Magick is stored on your computer and add the file address, replacing `C:\\Program Files\\ImageMagick-7.0.10-Q16`. On a windows system make sure to include two back slashes, rather than one, in the address.
 
-```{r message=FALSE, animation.hook = 'ffmpeg'}
+```{r message=FALSE, animation.hook = 'ffmpeg', warning=FALSE}
 #creating an animated Gif using tmap and magick packages
 library(magick)
   
@@ -343,7 +343,7 @@ Leaflet maps are created with leaflet(), the result of which is a leaflet map ob
 For more on leaflet in R see the [GitHub page](https://rstudio.github.io/leaflet/)
 
 Let's create a basic interactive map first of all.
-```{r fig.align="center", message=FALSE}
+```{r fig.align="center", message=FALSE, warning=FALSE}
 library(RColorBrewer)
 library(leaflet)
 library(widgetframe)
@@ -386,7 +386,7 @@ print(County_map)
 
 
 Ramping up the settings
-```{r fig.align="center", message=FALSE, out.width = "100%"}
+```{r fig.align="center", echo=FALSE, out.width = "100%", warning=FALSE}
 library(scales)# inserts comma's into large numbers for use on labels through comma()
 
 #setting up label
@@ -470,7 +470,7 @@ invisible(print(County_map))
 ```
 
 Adding layers to a map using groups
-```{r fig.align="center", out.width = "100%"}
+```{r fig.align="center", echo=FALSE, out.width = "100%", warning=FALSE}
 #run tranformation when first running chunk
 Province_stats = st_transform(Province_stats, 4326) 
 
