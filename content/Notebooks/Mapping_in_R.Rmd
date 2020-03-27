@@ -362,7 +362,7 @@ highlight <- highlightOptions(color = "grey",
                               weight = 2,
                               bringToFront =TRUE)
 
-County_map <- leaflet() %>%
+County <- leaflet() %>%
   #addProviderTiles(providers$Esri.WorldTopoMap)%>% #can add a background map by uncommenting
     addPolygons(data = County_stats, 
                 fillColor = ~pal(Cases), 
@@ -378,9 +378,8 @@ County_map <- leaflet() %>%
               title = "Cases<br>") %>%
     addScaleBar(position = "topright")
     
-# Display and save the map
-print(County_map)
-
+frameableWidget(County)
+saveWidget(County, file= "C:/Users/Cian/Documents/GitHub/Personal_Site/Personal_Site/public/Notebooks/mapping_in_r/index.html")
 ```
 
 
@@ -465,8 +464,8 @@ County_map <- leaflet() %>%
               title = "Infection Rate<br>") %>%
     addScaleBar(position = "topright")
     
-# Display and save the map
-invisible(print(County_map))
+frameableWidget(County_map)
+saveWidget(County_map, file= "C:/Users/Cian/Documents/GitHub/Personal_Site/Personal_Site/public/Notebooks/mapping_in_r/index.html")
 ```
 
 Adding layers to a map using groups
@@ -631,6 +630,6 @@ Province_map <- leaflet() %>%
                                      as.character(unique_date[2]),
                                      as.character(unique_date[3]))) #setting order of groups
 
-# Display and save the map.
-invisible(print(Province_map))
+frameableWidget(Province_map)
+saveWidget(Province_map, file= "C:/Users/Cian/Documents/GitHub/Personal_Site/Personal_Site/public/Notebooks/mapping_in_r/index.html")
 ```

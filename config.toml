@@ -36,8 +36,7 @@ enableEmoji = true
 
 
 [params]
-    description = "Cian White Personal Website with Blog, Notebooks, Projects and CV. A website built through Hugo and blogdown."
-
+    description = "Personal Website of Cian White"
     # options for highlight.js (version, additional languages, and theme)
     highlightjsVersion = "9.12.0"
     highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
@@ -53,7 +52,9 @@ enableEmoji = true
     #to allow people to send merge (pull) requests and edit a page.
     GithubEdit = "https://github.com/ciwhite/Personal_Site/edit/master/content/"
     
-    [params.logo]
+      enable_comments = true  #enabling comments on posts
+
+[params.logo]
     url = "profile.jpg"
     width = 50
     height = 50
