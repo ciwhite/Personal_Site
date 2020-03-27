@@ -114,6 +114,45 @@ code {
   transform: scale(1.1);
 }
 
+.terms p a {
+  float: right;
+  font-size: 10px;
+  padding: 1px 5px;
+  font-weight: bold;
+  border-radius: 3px;
+  background: #bbb;
+  color: #fff
+}
+
+.terms p {
+  margin: 15px 0 25px;
+}
+
+.terms {
+  text-decoration: none;
+  color: inherit;
+  font-size: 10px;
+  background: transparent;
+  margin: 0px auto 10px;
+}
+
+
+.terms a {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1.5px solid #CBF8DF;
+  background: transparent;
+}
+
+.terms a:hover,
+.terms a:focus {
+ border-bottom: transparent;
+}
+
+
+
+
+
 .content {
   max-width: 900px;
   margin: 40px auto 10px;
