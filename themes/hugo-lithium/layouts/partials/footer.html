@@ -4,6 +4,30 @@
             <a href="{{ .Site.RSSLink | relURL }}" type="application/rss+xml" target="_blank">RSS feed</a>
           </li>
           <li>
+                <a href="https://twitter.com/Cian_De_Faoiche" class="footer-links-kudos">
+    <img src="{{ print "images/" .Site.Params.twitter.url | relURL }}"
+         width="{{ .Site.Params.twitter.width }}"
+         height="{{ .Site.Params.twitter.height }}"
+         alt="{{ .Site.Params.twitter.alt }}">
+         </a>
+         </li>
+         <li>
+     <a href="https://github.com/ciwhite/" class="footer-links-kudos">
+    <img src="{{ print "images/" .Site.Params.github.url | relURL }}"
+         width="{{ .Site.Params.github.width }}"
+         height="{{ .Site.Params.github.height }}"
+         alt="{{ .Site.Params.github.alt }}">
+        </a>
+        </li>
+        <li>
+       <a href="mailto:ciwhite@tcd.ie" class="footer-links-kudos">
+    <img src="{{ print "images/" .Site.Params.gmail.url | relURL }}"
+         width="{{ .Site.Params.gmail.width }}"
+         height="{{ .Site.Params.gmail.height }}"
+         alt="{{ .Site.Params.gmail.alt }}">
+          </a>
+          </li>
+          <li>
             <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
           </li>
         </ul>

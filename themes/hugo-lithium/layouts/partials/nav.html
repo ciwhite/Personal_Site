@@ -11,24 +11,4 @@
     <li><a href="{{ .URL }}">{{ .Name }}</a></li>
     {{ end }}
   </ul>
-  
-      <a href="https://twitter.com/Cian_De_Faoiche" class="nav-links">
-    <img src="{{ print "images/" .Site.Params.twitter.url | relURL }}"
-         width="{{ .Site.Params.logo.width }}"
-         height="{{ .Site.Params.logo.height }}"
-         alt="{{ .Site.Params.logo.alt }}">
-  </a>
-  
-     <a href="https://github.com/ciwhite/" class="nav-links">
-    <img src="{{ print "images/" .Site.Params.github.url | relURL }}"
-         width="{{ .Site.Params.logo.width }}"
-         height="{{ .Site.Params.logo.height }}"
-         alt="{{ .Site.Params.logo.alt }}">
-  </a>
-       <a href="mailto:ciwhite@tcd.ie" class="nav-links">
-    <img src="{{ print "images/" .Site.Params.gmail.url | relURL }}"
-         width="{{ .Site.Params.logo.width }}"
-         height="{{ .Site.Params.logo.height }}"
-         alt="{{ .Site.Params.logo.alt }}">
-  </a>
 </nav>
