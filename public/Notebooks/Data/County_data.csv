@@ -1,0 +1,97 @@
+"County","Province","Nation","Date","Cases"
+"Carlow","Leinster","Ireland",2020-03-18,5
+"Carlow","Leinster","Ireland",2020-03-19,5
+"Carlow","Leinster","Ireland",2020-03-20,5
+"Cavan","Ulster","Ireland",2020-03-18,5
+"Cavan","Ulster","Ireland",2020-03-19,5
+"Cavan","Ulster","Ireland",2020-03-20,5
+"Clare","Munster","Ireland",2020-03-18,5
+"Clare","Munster","Ireland",2020-03-19,7
+"Clare","Munster","Ireland",2020-03-20,7
+"Cork","Munster","Ireland",2020-03-18,48
+"Cork","Munster","Ireland",2020-03-19,88
+"Cork","Munster","Ireland",2020-03-20,101
+"Donegal","Ulster","Ireland",2020-03-18,5
+"Donegal","Ulster","Ireland",2020-03-19,5
+"Donegal","Ulster","Ireland",2020-03-20,5
+"Dublin","Leinster","Ireland",2020-03-18,129
+"Dublin","Leinster","Ireland",2020-03-19,320
+"Dublin","Leinster","Ireland",2020-03-20,402
+"Galway","Connacht","Ireland",2020-03-18,12
+"Galway","Connacht","Ireland",2020-03-19,21
+"Galway","Connacht","Ireland",2020-03-20,25
+"Kerry","Munster","Ireland",2020-03-18,6
+"Kerry","Munster","Ireland",2020-03-19,8
+"Kerry","Munster","Ireland",2020-03-20,9
+"Kildare","Leinster","Ireland",2020-03-18,5
+"Kildare","Leinster","Ireland",2020-03-19,18
+"Kildare","Leinster","Ireland",2020-03-20,20
+"Kilkenny","Leinster","Ireland",2020-03-18,5
+"Kilkenny","Leinster","Ireland",2020-03-19,11
+"Kilkenny","Leinster","Ireland",2020-03-20,11
+"Laois","Leinster","Ireland",2020-03-18,0
+"Laois","Leinster","Ireland",2020-03-19,5
+"Laois","Leinster","Ireland",2020-03-20,6
+"Leitrum","Connacht","Ireland",2020-03-18,0
+"Leitrum","Connacht","Ireland",2020-03-19,5
+"Leitrum","Connacht","Ireland",2020-03-20,5
+"Limerick","Munster","Ireland",2020-03-18,48
+"Limerick","Munster","Ireland",2020-03-19,15
+"Limerick","Munster","Ireland",2020-03-20,15
+"Longford","Leinster","Ireland",2020-03-18,5
+"Longford","Leinster","Ireland",2020-03-19,5
+"Longford","Leinster","Ireland",2020-03-20,5
+"Louth","Leinster","Ireland",2020-03-18,5
+"Louth","Leinster","Ireland",2020-03-19,9
+"Louth","Leinster","Ireland",2020-03-20,11
+"Mayo","Connacht","Ireland",2020-03-18,5
+"Mayo","Connacht","Ireland",2020-03-19,5
+"Mayo","Connacht","Ireland",2020-03-20,5
+"Meath","Leinster","Ireland",2020-03-18,5
+"Meath","Leinster","Ireland",2020-03-19,10
+"Meath","Leinster","Ireland",2020-03-20,11
+"Monaghan","Leinster","Ireland",2020-03-18,0
+"Monaghan","Leinster","Ireland",2020-03-19,NA
+"Monaghan","Leinster","Ireland",2020-03-20,5
+"Offaly","Leinster","Ireland",2020-03-18,5
+"Offaly","Leinster","Ireland",2020-03-19,7
+"Offaly","Leinster","Ireland",2020-03-20,9
+"Roscommon","Connacht","Ireland",2020-03-18,5
+"Roscommon","Connacht","Ireland",2020-03-19,5
+"Roscommon","Connacht","Ireland",2020-03-20,5
+"Sligo","Connacht","Ireland",2020-03-18,5
+"Sligo","Connacht","Ireland",2020-03-19,5
+"Sligo","Connacht","Ireland",2020-03-20,5
+"Tipperary","Munster","Ireland",2020-03-18,5
+"Tipperary","Munster","Ireland",2020-03-19,5
+"Tipperary","Munster","Ireland",2020-03-20,8
+"Waterford","Munster","Ireland",2020-03-18,7
+"Waterford","Munster","Ireland",2020-03-19,8
+"Waterford","Munster","Ireland",2020-03-20,9
+"Westmeath","Leinster","Ireland",2020-03-18,7
+"Westmeath","Leinster","Ireland",2020-03-19,14
+"Westmeath","Leinster","Ireland",2020-03-20,16
+"Wexford","Leinster","Ireland",2020-03-18,5
+"Wexford","Leinster","Ireland",2020-03-19,5
+"Wexford","Leinster","Ireland",2020-03-20,5
+"Wicklow","Leinster","Ireland",2020-03-18,9
+"Wicklow","Leinster","Ireland",2020-03-19,17
+"Wicklow","Leinster","Ireland",2020-03-20,22
+"Antrim","Ulster","Northern Ireland",2020-03-18,NA
+"Antrim","Ulster","Northern Ireland",2020-03-19,NA
+"Antrim","Ulster","Northern Ireland",2020-03-20,NA
+"Down","Ulster","Northern Ireland",2020-03-18,NA
+"Down","Ulster","Northern Ireland",2020-03-19,NA
+"Down","Ulster","Northern Ireland",2020-03-20,NA
+"Derry","Ulster","Northern Ireland",2020-03-18,NA
+"Derry","Ulster","Northern Ireland",2020-03-19,NA
+"Derry","Ulster","Northern Ireland",2020-03-20,NA
+"Tyrone","Ulster","Northern Ireland",2020-03-18,NA
+"Tyrone","Ulster","Northern Ireland",2020-03-19,NA
+"Tyrone","Ulster","Northern Ireland",2020-03-20,NA
+"Armagh","Ulster","Northern Ireland",2020-03-18,NA
+"Armagh","Ulster","Northern Ireland",2020-03-19,NA
+"Armagh","Ulster","Northern Ireland",2020-03-20,NA
+"Fermanagh","Ulster","Northern Ireland",2020-03-18,NA
+"Fermanagh","Ulster","Northern Ireland",2020-03-19,NA
+"Fermanagh","Ulster","Northern Ireland",2020-03-20,NA

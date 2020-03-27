@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cian White</title>
+    <link>/</link>
+    <description>Recent content on Cian White</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-uk</language>
+    <lastBuildDate>Thu, 26 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Creating Static and Interactive Maps in R</title>
+      <link>/notebooks/mapping_in_r/</link>
+      <pubDate>Thu, 26 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/mapping_in_r/</guid>
+      <description>Reading time: 13 minute(s) @ 200 WPM.
+A note: if you are reading this on Rpubs, the links will only work is you Control Click.
+Irish COVID 19 Intertactive MapAimTo create a map that tracks the spread of COVID 19 in Ireland as the pandemic progresses. It is meant as a public educational tool and data will be collected from various sources, such as those cited in the Wiki page on COVID 19 in Ireland, and also health statistics which the HSE have recentrly started to publish on a county by county level.</description>
+    </item>
+    
+    <item>
+      <title>Cian White, Attempting to Science, instead Launches Site</title>
+      <link>/2020/03/13/cian-white-attempting-to-science-instead-launches-site/</link>
+      <pubDate>Fri, 13 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/03/13/cian-white-attempting-to-science-instead-launches-site/</guid>
+      <description>Well. Finally got around to putting this website together. Neat thing about it - powered by Jekyll and I can use Markdown to author my posts. It actually is a lot easier than I thought it was going to be.</description>
+    </item>
+    
+    <item>
+      <title>Principal Component Analysis in R</title>
+      <link>/notebooks/pca/</link>
+      <pubDate>Tue, 03 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/pca/</guid>
+      <description>Prinicpal Component AnalysisI am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is ‘wide’, there are a lot of columns for the amount of rows of datapoints. A PCA looks for correlations among the columns by searching for vectors (eigenvectors) that correlate stongly with the data in the columns (high eigenvalues). By searchinig for this eigenvectors with high eigenvalues we can hopefully reduce the dimensionality of the dataset.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>A Phd Student at the Botany Department of Trinity College Dublin, supervised by Professor Jane Stout and Dr. Marcus Collier.
+Ongoing Projects
+ A framework for identifying Nature-based Solutions. The impact of an urban and agricultural gradient on the structure of Plant-Flower Visitor interaction networks. Predicting plant network roles from floral traits. Managing wildflower meadows for multiple ecosystem service delivery. Investigating the stability of ecosystem service provision using network metrics  Side Projects</description>
+    </item>
+    
+    <item>
+      <title>Curriculum Vitae</title>
+      <link>/cv/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/cv/</guid>
+      <description>{{ page.title }} Cian White
+The Owl,
+Grand Canal Dock, Dublin 2, Dublin, Ireland
+Phone: +353 87 315 6535
+ciwhite@tcd.ie
+RESEARCH INTERESTS My research interests lie at the intersection of people and nature. I am interested in how an understanding of ecological systems can inform adaptive management for ecosystem service provision to create Nature-based Solutions. Given that ecosystems and society are complex systems I adapt methods from complexity science, particularly graph theory, to study the magnitude and stability of ecosystem service provision.</description>
+    </item>
+    
+  </channel>
+</rss>

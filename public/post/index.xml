@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Cian White</title>
+    <link>/post/</link>
+    <description>Recent content in Posts on Cian White</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-uk</language>
+    <lastBuildDate>Fri, 13 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Cian White, Attempting to Science, instead Launches Site</title>
+      <link>/2020/03/13/cian-white-attempting-to-science-instead-launches-site/</link>
+      <pubDate>Fri, 13 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/03/13/cian-white-attempting-to-science-instead-launches-site/</guid>
+      <description>Well. Finally got around to putting this website together. Neat thing about it - powered by Jekyll and I can use Markdown to author my posts. It actually is a lot easier than I thought it was going to be.</description>
+    </item>
+    
+  </channel>
+</rss>

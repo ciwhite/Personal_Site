@@ -1,0 +1,76 @@
+baseurl = "http://www.cianwhite.org/"
+languageCode = "en-uk"
+title = "Cian White"
+theme = "hugo-lithium"
+googleAnalytics = "UA-162016947-1"
+disqusShortname = "Cian White"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+relativeURLs = true
+enableEmoji = true
+
+[permalinks]
+    post = "/:year/:month/:day/:slug/"
+    Notebooks = "/Notebooks/:slug/"
+    Blog = "/post/:slug/"
+    
+[social]
+    github  = "https://github.com/ciwhite/"
+    twitter = "https://twitter.com/Cian_De_Faoiche"  
+    
+    
+[[menu.main]]
+    name = "About"
+    url = "/about/"
+    weight = 1
+    
+[[menu.main]]
+    name = "Blog"
+    url = "/post/"
+    weight = 2
+    
+[[menu.main]]
+    name = "Notebooks"
+    url = "/Notebooks/"
+    weight = 3    
+    
+
+
+[params]
+    description = "Cian White Personal Website with Blog, Notebooks, Projects and CV. A website built through Hugo and blogdown."
+
+    # options for highlight.js (version, additional languages, and theme)
+    highlightjsVersion = "9.12.0"
+    highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
+    highlightjsLang = ["r", "yaml"]
+    highlightjsTheme = "github"
+
+    MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
+    MathJaxVersion = "2.7.5"
+
+    # path to the favicon, under "static"
+    favicon = "favicon.ico"
+
+    [params.logo]
+    url = "profile.jpg"
+    width = 40
+    height = 40
+    alt = "Logo"
+
+
+[params.github]
+    url = "github.png"
+    width = 50
+    height = 50
+    weight = 4
+    
+[params.twitter]
+    url = "twitter.png"
+    width = 50
+    height = 50
+    weight = 5
+    
+[params.gmail]
+    url = "gmail.png"
+    width = 50
+    height = 50
+    weight = 5

@@ -1,0 +1,634 @@
+---
+title: "Principal Component Analysis in R"
+author: "Cian White"
+date: '2020-03-03'
+output: html_notebook
+slug: PCA
+categories:
+  - R
+tags:
+  - Principal Component Analysis
+  - R Markdown
+---
+
+
+
+<hr />
+<div id="prinicpal-component-analysis" class="section level2">
+<h2>Prinicpal Component Analysis</h2>
+<p>I am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is ‘wide’, there are a lot of columns for the amount of rows of datapoints. A PCA looks for correlations among the columns by searching for vectors (eigenvectors) that correlate stongly with the data in the columns (high eigenvalues). By searchinig for this eigenvectors with high eigenvalues we can hopefully reduce the dimensionality of the dataset.</p>
+<ul>
+<li><p>Information Sources:</p>
+<ul>
+<li>Datacamp.com <a href="https://www.datacamp.com/community/tutorials/pca-analysis-r">Intro to PCA</a></li>
+<li>Stanford <a href="https://web.stanford.edu/class/bios221/labs/multivariate/lab_5_multivariate.html">Multivariate analysis in R</a></li>
+<li>Little book of R <a href="https://little-book-of-r-for-multivariate-analysis.readthedocs.io/en/latest/src/multivariateanalysis.html">Using R for Multivariate Analysis</a></li>
+<li>Richard Lent <a href="https://richardlent.github.io/post/multivariate-analysis-with-r/">Tutorial on Multivariate Analysis</a></li>
+<li>Principal Component Methods in R: <a href="http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/">Practical Guide</a>
+<ul>
+<li>using the <code>factoextra package</code></li>
+<li>see Shiny application <a href="https://www.r-bloggers.com/all-you-need-to-know-on-pca/"><code>Factoshiny</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>PCA is a type of linear transformation on a given data set that has values for a certain number of variables (coordinates) for a certain amount of spaces. This linear transformation fits this dataset to a new coordinate system in such a way that the most significant variance is found on the first coordinate, and each subsequent coordinate is orthogonal to the last and has a lesser variance. In this way, you transform a set of x correlated variables over y samples to a set of p uncorrelated principal components over the same samples.</p>
+<p>Where many variables correlate with one another, they will all contribute strongly to the same principal component. Each principal component sums up a certain percentage of the total variation in the dataset. Where your initial variables are strongly correlated with one another, you will be able to approximate most of the complexity in your dataset with just a few principal components. As you add more principal components, you summarize more and more of the original dataset. Adding additional components makes your estimate of the total dataset more accurate, but also more unwieldy.</p>
+<p>Simply put, an eigenvector is a direction, such as “vertical” or “45 degrees”, while an eigenvalue is a number telling you how much variance there is in the data in that direction. The eigenvector with the highest eigenvalue is, therefore, the first principal component.</p>
+<div id="standardising-variables" class="section level3">
+<h3>Standardising Variables</h3>
+<p>If you want to compare different variables that have different units, are very different variances, it is a good idea to first standardise the variables.</p>
+<p>Yet, whether you want to standardise or not depends on the question you are asking, see this <a href="https://stats.stackexchange.com/questions/53/pca-on-correlation-or-covariance">stack exchange discussion</a></p>
+<p>If variables are not standardised the first principal component will be dominated by variables which show the largest variance.</p>
+<ul>
+<li>Why is the default to rescale the data?</li>
+</ul>
+<p>You tend to use the covariance matrix when the variable scales are similar and the correlation matrix when variables are on different scales.</p>
+<p>Using the correlation matrix is equivalent to standardizing each of the variables (to mean 0 and standard deviation 1)</p>
+<p>Recall the difference between correlation and covariance. In correlation you rescale by dividing by the norm of each dimension. This is more in line with what we’re interested in. If one of our variable is measured in inches and then we decide to change that measurement to feet, the variance decreases by a factor of <span class="math inline">\(12^{-2}\)</span>. We don’t want the result of our PCA to change based on the units a dimension is measured in. To avoid problems like this, we rescale our data so that each dimension has variance 1.</p>
+<p>Thus, it would be a better idea to first standardise the variables so that they all have variance 1 and mean 0, and to then carry out the principal component analysis on the standardised data. This would allow us to find the principal components that provide the best low-dimensional representation of the variation in the original data, without being overly biased by those variables that show the most variance in the original data.</p>
+<p>You can standardise variables in R using the <code>scale()</code> function.</p>
+<p>For example, to standardise the values of the 18 soil variables at each site, we type:
+<code>standardisedvalues &lt;- as.data.frame(scale(T.18[1:18]))</code></p>
+<p>Note that we use the <code>as.data.frame()</code> function to convert the output of <code>scale()</code> into a data frame, which is the same type of R variable that the <code>T.18</code> variable.</p>
+<p>We can check that each of the standardised variables stored in <code>standardisedvalues</code> has a mean of 0 and a standard deviation of 1 by typing:</p>
+<pre class="r"><code>#sapply(standardisedvalues,mean)
+#       V2            V3            V4            V5            V6            V7
+#  -8.591766e-16 -6.776446e-17  8.045176e-16 -7.720494e-17 -4.073935e-17 -1.395560e-17
+#       V8            V9           V10           V11           V12           V13
+#  6.958263e-17 -1.042186e-16 -1.221369e-16  3.649376e-17  2.093741e-16  3.003459e-16
+#      V14
+#  -1.034429e-16
+#sapply(standardisedvalues,sd)
+#  V2  V3  V4  V5  V6  V7  V8  V9 V10 V11 V12 V13 V14
+#  1   1   1   1   1   1   1   1   1   1   1   1   1</code></pre>
+<p>We see that the means of the standardised variables are all very tiny numbers and so are essentially equal to 0, and the standard deviations of the standardised variables are all equal to 1.</p>
+<ul>
+<li>Why is the default to center?</li>
+</ul>
+<p>Suppose that we did not center. We can relate PCA to directions with highest covariance. When we calculate sample covariance, we subtract the mean from each observation. If we skip this step (not centering), then the first axis of the PCA would always be pointing towards the center of mass.</p>
+<p>Some functions in R that calculate the PCA do not center by default. There might be a good reason to not center (e.g., you centered a large dataset already and you are only looking at a subsample), but in general, you should always center your data when doing a PCA.</p>
+</div>
+<div id="constructing-a-pca" class="section level3">
+<h3>Constructing a PCA</h3>
+<p>The <code>prcomp</code> package contains an arguement <code>scale</code> which scales the variables used in a PCA, so it is not necessary to manually scale as above.</p>
+<p>Loading data, selecting columns to include in PCA and running a scaled and centred PCA.</p>
+<pre class="r"><code>Env_18 &lt;- read.csv(&quot;PCA.csv&quot;)
+
+colnames(Env_18)[1] &lt;- &quot;Param&quot;
+
+for(i in 1:18){
+rownames(Env_18)[i] &lt;- as.character(droplevels(Env_18$Param[i]))
+}
+
+Env_18 &lt;- Env_18[,-1]
+
+
+#str(Env_18)
+
+
+Env.18.pca &lt;- prcomp(Env_18, center = TRUE, scale. = TRUE)
+
+#summary(Env.18.pca)
+
+#str(Env.18.pca)
+
+#Transposing the data so we are looking at correlation between the soil characteristics themselves and not correleations among the sites.
+T.18 &lt;- as.data.frame(t(Env_18))
+T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
+#summary(T.18.pca)</code></pre>
+<ul>
+<li>the centre, scaling, standard deviation of each principal component.</li>
+</ul>
+<pre class="r"><code>$center, $scale, $sdev</code></pre>
+<ul>
+<li>The relationship (correlation or anticorrelation, etc) between the initial variables and the principal components</li>
+</ul>
+<pre class="r"><code>$rotation</code></pre>
+<ul>
+<li>The values of each sample in terms of the principal components</li>
+</ul>
+<pre class="r"><code>$x</code></pre>
+</div>
+<div id="theory-behind-pca-results" class="section level3">
+<h3>Theory Behind PCA Results</h3>
+<p>This code will calculate the PCA results for variables (i.e. columns): coordinates, cos2, and contributions</p>
+<ul>
+<li>var.coord = loadings * the component standard deviations</li>
+<li>var.cos2 = var.coord^2</li>
+<li>var.contrib. The contribution of a variable to a given principal component is (in percentage) : (var.cos2 * 100) / (total cos2 of the component)</li>
+</ul>
+<pre class="r"><code>#helper function
+
+var_coord_func &lt;- function(loadings, comp.sdev){
+  loadings*comp.sdev
+}
+
+# Compute Coordinates
+
+loadings &lt;- T.18.pca$rotation
+sdev &lt;- T.18.pca$sdev
+var.coord &lt;- t(apply(loadings, MARGIN = 1, var_coord_func, sdev)) 
+head(var.coord[, 1:4])</code></pre>
+<pre><code>##                 PC1        PC2         PC3         PC4
+## m_gv      0.1112659 -0.8397329 -0.27438780 -0.02808150
+## m_pH_H2O -0.3770343  0.3365268 -0.78532581 -0.02319610
+## m_pH_Ca  -0.3978461  0.1885975 -0.73551774 -0.08737664
+## m_CN      0.1787622 -0.6555604  0.60132147  0.15584940
+## m_Cl     -0.4319542 -0.3695436 -0.07478097  0.57131811
+## m_NO3     0.2612686 -0.5962655 -0.49718902 -0.44795962</code></pre>
+<pre class="r"><code>#compute Cos2 (the variable components squared), or quality of representation on given dimension
+var.cos2 &lt;- var.coord^2
+head(var.cos2[, 1:4])</code></pre>
+<pre><code>##                 PC1        PC2         PC3          PC4
+## m_gv     0.01238009 0.70515135 0.075288662 0.0007885708
+## m_pH_H2O 0.14215486 0.11325025 0.616736633 0.0005380592
+## m_pH_Ca  0.15828153 0.03556902 0.540986346 0.0076346773
+## m_CN     0.03195592 0.42975950 0.361587515 0.0242890340
+## m_Cl     0.18658447 0.13656246 0.005592193 0.3264043823
+## m_NO3    0.06826130 0.35553253 0.247196926 0.2006678208</code></pre>
+<pre class="r"><code>#Compute contributions
+comp.cos2 &lt;- apply(var.cos2, MARGIN = 2, FUN = sum)
+contrib &lt;- function(var.cos2, comp.cos2){var.cos2*100/comp.cos2}
+var.contrib &lt;- t(apply(var.cos2, MARGIN = 1, contrib, comp.cos2))
+head(var.contrib[, 1:4])</code></pre>
+<pre><code>##                PC1        PC2        PC3         PC4
+## m_gv     0.2028662 17.8681349  2.2542900  0.06399317
+## m_pH_H2O 2.3294185  2.8696972 18.4663026  0.04366394
+## m_pH_Ca  2.5936781  0.9012987 16.1981906  0.61956032
+## m_CN     0.5236453 10.8898617 10.8266383  1.97107503
+## m_Cl     3.0574637  3.4604153  0.1674412 26.48798338
+## m_NO3    1.1185629  9.0089924  7.4015601 16.28435827</code></pre>
+<p>This code will calculate PCA results for individuals (i.e. rows)</p>
+<ul>
+<li>ind.coord = res.pca$x</li>
+<li>Cos2 of individuals. Two steps:
+<ul>
+<li>Calculate the square distance between each individual and the PCA center of gravity: d2 = [(var1_ind_i - mean_var1)/sd_var1]^2 + …+ [(var10_ind_i - mean_var10)/sd_var10]^2 + …+..</li>
+<li>Calculate the cos2 as ind.coord^2/d2</li>
+</ul></li>
+<li>Contributions of individuals to the principal components: 100 * (1 / number_of_individuals)*(ind.coord^2 / comp_sdev^2). Note that the sum of all the contributions per column is 100</li>
+</ul>
+<pre class="r"><code># Coordinates of individuals
+#::::::::::::::::::::::::::::::::::
+ind.coord &lt;- T.18.pca$x
+head(ind.coord[, 1:4])</code></pre>
+<pre><code>##          PC1        PC2         PC3        PC4
+## aa  1.843619  0.6984034  1.39085931  0.8521719
+## ab  1.499047  3.3314063 -0.13836903 -0.4757199
+## ac  2.438382  2.3485011 -0.11155408 -1.0069934
+## ba -4.068176  0.4089068  0.67238375 -1.3135724
+## bb -4.251161  0.8734186  0.05115095 -0.9593515
+## bc -4.245708 -0.4283674  0.01116178 -0.5839797</code></pre>
+<pre class="r"><code># Cos2 of individuals
+#:::::::::::::::::::::::::::::::::
+# 1. square of the distance between an individual and the
+# PCA center of gravity
+center &lt;- T.18.pca$center
+scale&lt;- T.18.pca$scale
+getdistance &lt;- function(ind_row, center, scale){
+  return(sum(((ind_row-center)/scale)^2))
+  }
+d2 &lt;- apply(T.18,1,getdistance, center, scale)
+# 2. Compute the cos2. The sum of each row is 1
+cos2 &lt;- function(ind.coord, d2){return(ind.coord^2/d2)}
+ind.cos2 &lt;- apply(ind.coord, 2, cos2, d2)
+head(ind.cos2[, 1:4])</code></pre>
+<pre><code>##          PC1         PC2          PC3        PC4
+## aa 0.3221090 0.046224592 1.833272e-01 0.06882002
+## ab 0.1444967 0.713645955 1.231134e-03 0.01455225
+## ac 0.3631827 0.336901791 7.601385e-04 0.06194055
+## ba 0.8227422 0.008312142 2.247494e-02 0.08577727
+## bb 0.8706902 0.036753047 1.260538e-04 0.04434085
+## bc 0.9101629 0.009265135 6.290511e-06 0.01721926</code></pre>
+<pre class="r"><code># Contributions of individuals
+#:::::::::::::::::::::::::::::::
+contrib &lt;- function(ind.coord, comp.sdev, n.ind){
+  100*(1/n.ind)*ind.coord^2/comp.sdev^2
+}
+ind.contrib &lt;- t(apply(ind.coord, 1, contrib, 
+                       T.18.pca$sdev, nrow(ind.coord)))
+head(ind.contrib[, 1:4])</code></pre>
+<pre><code>##          PC1        PC2          PC3      PC4
+## aa  3.094253  0.6866526 3.2179115510 3.273971
+## ab  2.045708 15.6235453 0.0318482443 1.020288
+## ac  5.412734  7.7643643 0.0207003940 4.571658
+## ba 15.066517  0.2353819 0.7520420308 7.779083
+## bb 16.452371  1.0739134 0.0043522633 4.149311
+## bc 16.410186  0.2583195 0.0002072405 1.537503</code></pre>
+</div>
+<div id="pca-visualisation" class="section level3">
+<h3>PCA Visualisation</h3>
+<p>Now it’s time to plot the PCA.</p>
+<p>we will first look at a package <code>ggbiplot</code>.</p>
+<p>You will make a biplot, which includes both the position of each sample in terms of PC1 and PC2 and also will show you how the initial variables map onto this. You will use the <code>ggbiplot</code> package, which offers a user-friendly and pretty function to plot biplots. A biplot is a type of plot that will allow you to visualize how the samples relate to one another in our PCA (which samples are similar and which are different) and will simultaneously reveal how each variable contributes to each principal component.</p>
+<pre class="r"><code>library(devtools)</code></pre>
+<pre><code>## Loading required package: usethis</code></pre>
+<pre class="r"><code>#install_github(&quot;vqv/ggbiplot&quot;)
+
+library(ggbiplot)</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>## Warning: package &#39;ggplot2&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Loading required package: plyr</code></pre>
+<pre><code>## Loading required package: scales</code></pre>
+<pre><code>## Loading required package: grid</code></pre>
+<pre class="r"><code>library(ggalt)</code></pre>
+<pre><code>## Warning: package &#39;ggalt&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Registered S3 methods overwritten by &#39;ggalt&#39;:
+##   method                  from   
+##   grid.draw.absoluteGrob  ggplot2
+##   grobHeight.absoluteGrob ggplot2
+##   grobWidth.absoluteGrob  ggplot2
+##   grobX.absoluteGrob      ggplot2
+##   grobY.absoluteGrob      ggplot2</code></pre>
+<pre class="r"><code>library(ggforce)</code></pre>
+<pre><code>## Warning: package &#39;ggforce&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>ggbiplot(Env.18.pca)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<pre class="r"><code>ggbiplot(T.18.pca)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-2.png" width="672" /></p>
+<pre class="r"><code>#lets add in rownames so that we can see the identity of the points plotted.
+ggbiplot(Env.18.pca, labels=rownames(Env_18))</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-3.png" width="672" /></p>
+<pre class="r"><code>ggbiplot(T.18.pca, labels=rownames(T.18))</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+<p>Many other packages exist for plotting PCAs. Another suite of packages are the <code>facto</code> package family, which again works off the <code>ggplot</code> functionality</p>
+<pre class="r"><code>library(factoextra)</code></pre>
+<pre><code>## Warning: package &#39;factoextra&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Welcome! Want to learn more? See two factoextra-related books at https://goo.gl/ve3WBa</code></pre>
+<pre class="r"><code>#scree plot
+fviz_eig(T.18.pca)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code>#individuals (rows)
+fviz_pca_ind(T.18.pca,
+             col.ind = &quot;cos2&quot;, # Color by the quality of representation
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;),
+             repel = TRUE     # Avoid text overlapping
+             )</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-9-2.png" width="672" /></p>
+<pre class="r"><code>#variables (columns)
+fviz_pca_var(T.18.pca,
+             col.var = &quot;contrib&quot;, # Color by contributions to the PC
+             gradient.cols = c(&quot;#00AFBB&quot;, &quot;#E7B800&quot;, &quot;#FC4E07&quot;),
+             repel = TRUE     # Avoid text overlapping
+             )</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+<pre class="r"><code>#biplot
+fviz_pca_biplot(T.18.pca, repel = TRUE,
+                col.var = &quot;#2E9FDF&quot;, # Variables color
+                col.ind = &quot;#696969&quot;  # Individuals color
+                )</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-9-4.png" width="672" /></p>
+<pre class="r"><code>library(Factoshiny)</code></pre>
+<pre><code>## Warning: package &#39;Factoshiny&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Loading required package: FactoMineR</code></pre>
+<pre><code>## Warning: package &#39;FactoMineR&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Loading required package: shiny</code></pre>
+<pre><code>## Warning: package &#39;shiny&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Loading required package: FactoInvestigate</code></pre>
+<pre><code>## Warning: package &#39;FactoInvestigate&#39; was built under R version 3.6.3</code></pre>
+<pre class="r"><code>#result &lt;- Factoshiny(T.18)</code></pre>
+<p><em>Supplementary Variables</em></p>
+<p>Qualitative / categorical variables</p>
+<p>Qualitative / categorical variables can be used to color individuals (rows) by groups. The grouping variable should be of same length as the number of active individuals</p>
+<p>Code for extracting data from <code>Factoextra</code> package on PCA results</p>
+<pre class="r"><code>library(factoextra)
+# Eigenvalues
+eig.val &lt;- get_eigenvalue(T.18.pca)
+eig.val</code></pre>
+<pre><code>##          eigenvalue variance.percent cumulative.variance.percent
+## Dim.1  6.102590e+00     3.390328e+01                    33.90328
+## Dim.2  3.946418e+00     2.192455e+01                    55.82782
+## Dim.3  3.339795e+00     1.855442e+01                    74.38224
+## Dim.4  1.232273e+00     6.845964e+00                    81.22820
+## Dim.5  9.323371e-01     5.179650e+00                    86.40785
+## Dim.6  7.314076e-01     4.063375e+00                    90.47123
+## Dim.7  6.372587e-01     3.540326e+00                    94.01155
+## Dim.8  3.753322e-01     2.085179e+00                    96.09673
+## Dim.9  3.178664e-01     1.765925e+00                    97.86266
+## Dim.10 1.847776e-01     1.026542e+00                    98.88920
+## Dim.11 7.417828e-02     4.121015e-01                    99.30130
+## Dim.12 6.980869e-02     3.878260e-01                    99.68913
+## Dim.13 3.720730e-02     2.067072e-01                    99.89583
+## Dim.14 1.241689e-02     6.898274e-02                    99.96482
+## Dim.15 3.706036e-03     2.058909e-02                    99.98541
+## Dim.16 2.339936e-03     1.299964e-02                    99.99841
+## Dim.17 2.868659e-04     1.593699e-03                   100.00000
+## Dim.18 1.028193e-32     5.712182e-32                   100.00000</code></pre>
+<pre class="r"><code># Results for Variables (i.e. columns)
+res.var &lt;- get_pca_var(T.18.pca)
+#res.var$coord          # Coordinates
+#res.var$contrib        # Contributions to the PCs
+#res.var$cos2           # Quality of representation 
+# Results for individuals (i.e rows)
+res.ind &lt;- get_pca_ind(T.18.pca)
+#res.ind$coord          # Coordinates
+#res.ind$contrib        # Contributions to the PCs
+#res.ind$cos2           # Quality of representation </code></pre>
+<hr />
+</div>
+<div id="deciding-how-many-principal-components-to-retain" class="section level3">
+<h3>Deciding how many principal components to retain</h3>
+<p>In order to decide how many principal components should be retained, it is common to summarise the results of a principal components analysis by making a scree plot, which we can do in R using the <code>screeplot()</code> function:</p>
+<pre class="r"><code>T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
+screeplot(T.18.pca, type=&quot;lines&quot;)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+The most obvious change in slope in the scree plot occurs at component 4, which is the “elbow” of the scree plot. Therefore, it cound be argued based on the basis of the scree plot that the first three components should be retained.</p>
+<p>Another way of deciding how many components to retain is to use Kaiser’s criterion: that we should only retain principal components for which the variance is above 1 (when principal component analysis was applied to standardised data). We can check this by finding the variance of each of the principal components:</p>
+<pre class="r"><code>(T.18.pca$sdev)^2</code></pre>
+<pre><code>##  [1] 6.102590e+00 3.946418e+00 3.339795e+00 1.232273e+00 9.323371e-01
+##  [6] 7.314076e-01 6.372587e-01 3.753322e-01 3.178664e-01 1.847776e-01
+## [11] 7.417828e-02 6.980869e-02 3.720730e-02 1.241689e-02 3.706036e-03
+## [16] 2.339936e-03 2.868659e-04 1.028193e-32</code></pre>
+<p>We see that the variance is above 1 for principal components 1, 2, 3 and 4 (which have variances 6.10, 3.95, 3.34, and 1.23 respectively). Therefore, using Kaiser’s criterion, we would retain the first four principal components.</p>
+<p>A third way to decide how many principal components to retain is to decide to keep the number of components required to explain at least some minimum amount of the total variance. For example, if it is important to explain at least 80% of the variance, we would retain the first four principal components, as we can see from the output of <code>summary(T.18.pca)</code> that the first four principal components explain 81.2% of the variance (while the first three components explain just 74.4%, so are not sufficient).</p>
+<pre class="r"><code>summary(T.18.pca)</code></pre>
+<pre><code>## Importance of components:
+##                          PC1    PC2    PC3     PC4    PC5     PC6    PC7
+## Standard deviation     2.470 1.9866 1.8275 1.11008 0.9656 0.85522 0.7983
+## Proportion of Variance 0.339 0.2192 0.1855 0.06846 0.0518 0.04063 0.0354
+## Cumulative Proportion  0.339 0.5583 0.7438 0.81228 0.8641 0.90471 0.9401
+##                            PC8     PC9    PC10    PC11    PC12    PC13    PC14
+## Standard deviation     0.61264 0.56380 0.42986 0.27236 0.26421 0.19289 0.11143
+## Proportion of Variance 0.02085 0.01766 0.01027 0.00412 0.00388 0.00207 0.00069
+## Cumulative Proportion  0.96097 0.97863 0.98889 0.99301 0.99689 0.99896 0.99965
+##                           PC15    PC16    PC17      PC18
+## Standard deviation     0.06088 0.04837 0.01694 1.014e-16
+## Proportion of Variance 0.00021 0.00013 0.00002 0.000e+00
+## Cumulative Proportion  0.99985 0.99998 1.00000 1.000e+00</code></pre>
+</div>
+<div id="interpreting-the-results" class="section level3">
+<h3>Interpreting the Results</h3>
+<p>Now, we can group our variables and see whether groups occupy a similar space in PCA space, indicating that they are correlated with each other. We do this using the groups argument in ggbiplot</p>
+<pre class="r"><code>#creating groups, turning ellipses on
+T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
+site.groups &lt;- c(rep(&quot;a&quot;, 3), rep(&quot;b&quot;, 3),rep(&quot;c&quot;, 3),rep(&quot;d&quot;, 3),rep(&quot;e&quot;, 3),rep(&quot;f&quot;, 3))
+ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<pre class="r"><code>#looking at the other PCA axes
+ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, choices = c(3,4))</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-16-2.png" width="672" /></p>
+<p>illustrates that axis three is useful for pulling out groups, such as f, so should include the first three axes as they contain alot of variation.</p>
+</div>
+<div id="graphical-parameters-with-ggbiplot" class="section level3">
+<h3>Graphical parameters with ggbiplot</h3>
+<p>Are also othe variables that can be used to alter the biplots.
+* Can add a circle to the centre of the dataset
+* Can scale the sampples (obs.scale) and the variables (var.scale)
+* Can remove the arrows altogether using var.axes</p>
+<pre class="r"><code>T.18.pca &lt;- prcomp(T.18, center = TRUE, scale. = TRUE)
+ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, circle = TRUE)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<pre class="r"><code>ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, ellipse = TRUE, obs.scale = 1, var.scale = 1)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-17-2.png" width="672" /></p>
+<pre class="r"><code>ggbiplot(T.18.pca, labels=rownames(T.18), groups = site.groups, obs.scale = 1, var.scale = 1, var.axes=FALSE ) +
+  theme_bw() +
+  geom_mark_hull(concavity = 5, expand = 0, radius = 0, aes(fill=site.groups))</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-17-3.png" width="672" /></p>
+<p>As ggbiplot is based on the ggplot function, you can use the same set of graphical parameters to alter the biplots as you would for any ggplot.</p>
+<ul>
+<li>Specify colours to use for the groups with <code>scale_colour_manual()</code></li>
+<li>Add a title with <code>ggtitle()</code></li>
+<li>Specify the <code>minimal()</code> theme, or other themes</li>
+<li>Move the legend with <code>theme()</code></li>
+</ul>
+<hr />
+</div>
+<div id="multivariate-packages" class="section level3">
+<h3>Multivariate Packages</h3>
+<p>So far I been using the base <code>stats</code> package for conducting PCA. But there are other packagaes out there that are design to facilitate a suite of multivariate analysis. <code>ade4</code> is such a package.</p>
+<p>Using the package <code>ade4</code> for multivariate analysis rather than base stats package. Combining with scree plots and comparing the <code>ade4</code> plotting functions to customised plotting using <code>ggplot</code> universe of packages</p>
+<pre class="r"><code>library(ade4) # multivariate analysis</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ade4&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:FactoMineR&#39;:
+## 
+##     reconst</code></pre>
+<pre class="r"><code>T.18.pca &lt;- dudi.pca(T.18, scannf = F, nf = 8)
+
+#The $co is the coordinates of variables in PCA space. Equivalent to loadings*sdev as calculated in theory section above for prcomp.
+#The $li correspond to the individual, or row, cooridinates 
+scatter(T.18.pca)</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p>Setting up libraries, and basic plot themes</p>
+<pre class="r"><code>library(grid) # has the viewport function, needed for insetting the scree plot
+library(ggpubr) #for making publication ready plots</code></pre>
+<pre><code>## Warning: package &#39;ggpubr&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Loading required package: magrittr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;ggpubr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:plyr&#39;:
+## 
+##     mutate</code></pre>
+<pre class="r"><code>library(ggforce) #for some nice polygons geoms
+library(ggalt) #contains some extra geoms
+library(viridis) #some nice colour palettes</code></pre>
+<pre><code>## Warning: package &#39;viridis&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## Loading required package: viridisLite</code></pre>
+<pre><code>## 
+## Attaching package: &#39;viridis&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:scales&#39;:
+## 
+##     viridis_pal</code></pre>
+<pre class="r"><code>library(hrbrthemes) #some nice themes for ggplot</code></pre>
+<pre><code>## Warning: package &#39;hrbrthemes&#39; was built under R version 3.6.3</code></pre>
+<pre><code>## NOTE: Either Arial Narrow or Roboto Condensed fonts are required to use these themes.</code></pre>
+<pre><code>##       Please use hrbrthemes::import_roboto_condensed() to install Roboto Condensed and</code></pre>
+<pre><code>##       if Arial Narrow is not on your system, please see http://bit.ly/arialnarrow</code></pre>
+<pre class="r"><code>### set up a plot we&#39;ll use later
+ppp &lt;- ggplot() +
+  coord_fixed() + 
+  labs(x= paste(&quot;PCA 1 &quot; , &quot;(&quot;, round((T.18.pca$eig[1] / sum(T.18.pca$eig))*100, 1), &quot;% explained var&quot; , &quot;)&quot;, sep = &quot;&quot;),
+       y= paste(&quot;PCA 2 &quot; , &quot;(&quot;, round((T.18.pca$eig[2] / sum(T.18.pca$eig))*100, 1), &quot;% explained var&quot; , &quot;)&quot;, sep = &quot;&quot;)) +
+  
+  geom_hline(yintercept=0, col=&quot;darkgrey&quot;) + 
+  
+  geom_vline(xintercept=0, col=&quot;darkgrey&quot;) +
+  
+  guides(size=guide_legend(title=&quot;PCA 3 (18.6%)&quot;)) +
+  
+  geom_segment(data =T.18.pca$co,
+               x=0, y=0,
+               xend = 2.5*T.18.pca$co[,1], yend = 2.5*T.18.pca$co[,2],
+               arrow =  arrow(angle = 30,length = unit(0.25, &quot;cm&quot;),
+                              ends = &quot;last&quot;, type = &quot;open&quot;),
+               alpha=0.4) +
+  scale_color_viridis(discrete=TRUE, guide=FALSE) +
+    theme_ipsum() 
+  
+# make the scree plot in a viewport
+myscree &lt;- function(eigs, x=0.8, y=0.1, just=c(&quot;left&quot;,&quot;centre&quot;)){
+  vp &lt;- viewport(x=x, y=y, width=0.2, height=0.2, just=just)
+  data &lt;- as.data.frame(cbind(factor(1:length(eigs)), eigs))
+  sp &lt;- ggplot() +
+    geom_col(aes(x=V1, y=eigs), data = data, position = &quot;stack&quot;) +  
+    labs(x = NULL, y = NULL, title = &quot;Scree Plot&quot;) +
+    theme(title = element_text(size = 6))
+  print(sp, vp=vp)
+}</code></pre>
+<p>Plotting using <code>geom_mark_ellipse()</code> function in the <code>ggforce</code> package</p>
+<pre class="r"><code>#set grouping factor for colour, grouping by sites and adding to dataframe
+T.18.pca$li[,1+dim(T.18.pca$li)[2]]=site.groups
+
+#creating a named logical vector for what legends to display. Want the size legend but not sites.
+leg &lt;- as.logical(c(1,0))
+names(leg) &lt;- c(&quot;size&quot;, &quot;col&quot;)
+
+ppp + 
+  geom_point(data=T.18.pca$li,
+             aes(x=Axis1,
+                 y=Axis2,
+                 size=Axis3,
+                 col=T.18.pca$li[,dim(T.18.pca$li)[2]]),
+             show.legend = leg) +
+  
+   scale_color_viridis(discrete=TRUE, guide=FALSE) +
+  
+  guides(size=guide_legend(title=&quot;PCA 3 (18.6%)&quot;)) +
+  
+  geom_text(data=T.18.pca$co,
+            aes(x=2.5*Comp1,
+                y=2.5*Comp2,
+                label=(colnames(T.18))),
+            size = 2, alpha=0.4) +
+  
+  geom_mark_ellipse(data =T.18.pca$li, aes(x=Axis1, y=Axis2,  
+                                           group=T.18.pca$li[,dim(T.18.pca$li)[2]],
+                                           fill=T.18.pca$li[,dim(T.18.pca$li)[2]]),
+                    alpha=0.4, expand=0) +
+  
+  scale_fill_viridis(discrete=TRUE, guide=FALSE) +
+  
+  guides(fill=guide_legend(title=&quot;Sites&quot;))</code></pre>
+<pre><code>## Scale for &#39;colour&#39; is already present. Adding another scale for &#39;colour&#39;,
+## which will replace the existing scale.</code></pre>
+<pre><code>## Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family not
+## found in Windows font database
+
+## Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family not
+## found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call(C_stringMetric, as.graphicsAnnot(x$label)): font family not
+## found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+## font family not found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
+<pre class="r"><code>myscree(T.18.pca$eig / sum(T.18.pca$eig))</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<pre class="r"><code>#can place labels whereever on the plot with this function, but it doesn&#39;t stay relative when size of plotting device changes
+#grid.text(label = &quot;text&quot;, x=0.83, y=0.75, rot=270, gp=gpar(fontsize=8, col=&quot;black&quot;))</code></pre>
+<p>Plotting using <code>geom_encircle()</code> function in the <code>ggalt</code> package</p>
+<pre class="r"><code>ppp + 
+  geom_point(data=T.18.pca$li,
+             aes(x=Axis1,
+                 y=Axis2,
+                 size=Axis3,
+                 col=T.18.pca$li[,dim(T.18.pca$li)[2]]),
+             show.legend = leg) +
+  
+  guides(size=guide_legend(title=&quot;PCA 3 (18.6%)&quot;)) +
+  
+  geom_text(data=T.18.pca$co,
+            aes(x=2.5*Comp1,
+                y=2.5*Comp2,
+                label=(colnames(T.18))),
+            size = 2, alpha=0.4) +
+  
+  geom_encircle(data =T.18.pca$li, aes(x=Axis1, y=Axis2,  
+                                           group=T.18.pca$li[,dim(T.18.pca$li)[2]],
+                                           fill=T.18.pca$li[,dim(T.18.pca$li)[2]]),
+                    alpha=0.4, expand=0) +
+  
+  scale_fill_viridis(discrete=TRUE, guide=FALSE) +
+  
+  guides(fill=guide_legend(title=&quot;Sites&quot;))</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call.graphics(C_text, as.graphicsAnnot(x$label), x$x, x$y, :
+## font family not found in Windows font database</code></pre>
+<pre><code>## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database
+
+## Warning in grid.Call(C_textBounds, as.graphicsAnnot(x$label), x$x, x$y, : font
+## family not found in Windows font database</code></pre>
+<pre class="r"><code>myscree(T.18.pca$eig / sum(T.18.pca$eig))</code></pre>
+<p><img src="/Notebooks/PCA_Script_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+</div>
+<div id="predicting-using-pca" class="section level3">
+<h3>Predicting using PCA</h3>
+<p>In this section, we’ll show how to predict the coordinates of supplementary individuals and variables using only the information provided by the previously performed PCA.</p>
+<p>see <a href="http://www.sthda.com/english/articles/31-principal-component-methods-in-r-practical-guide/118-principal-component-analysis-in-r-prcomp-vs-princomp/">here</a></p>
+</div>
+</div>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Principal Component Analysis on Cian White</title>
+    <link>/tags/principal-component-analysis/</link>
+    <description>Recent content in Principal Component Analysis on Cian White</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-uk</language>
+    <lastBuildDate>Tue, 03 Mar 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/tags/principal-component-analysis/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Principal Component Analysis in R</title>
+      <link>/notebooks/pca/</link>
+      <pubDate>Tue, 03 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/notebooks/pca/</guid>
+      <description>Prinicpal Component AnalysisI am setting up a notebook for how to run principal component analyses. PCA techniques are very useful for data exploration when the dataset is ‘wide’, there are a lot of columns for the amount of rows of datapoints. A PCA looks for correlations among the columns by searching for vectors (eigenvectors) that correlate stongly with the data in the columns (high eigenvalues). By searchinig for this eigenvectors with high eigenvalues we can hopefully reduce the dimensionality of the dataset.</description>
+    </item>
+    
+  </channel>
+</rss>
