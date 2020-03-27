@@ -30,6 +30,25 @@
           <li>
             <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
           </li>
+          
+          
+          {{ if .File.Path }}
+          
+{{ $.Scratch.Set "FilePath" (replace ($.Scratch.Get "FilePath") "\\" "/") }}
+
+{{ $Rmd := (print .File.BaseFileName ".Rmd") }}
+
+{{ if (where (readDir (print "content/" .File.Dir)) "Name" $Rmd) }}
+  {{ $.Scratch.Set "FilePath" (print .File.Dir $Rmd) }}
+{{ else }}
+  {{ $.Scratch.Set "FilePath" .File.Path }}
+{{ end }}
+
+{{ with .Site.Params.GithubEdit}}
+<a href='{{ . }}{{ $.Scratch.Get "FilePath" }}'>Edit this page</a>
+{{ end }}
+
+{{ end }}
         </ul>
       </footer>
 
@@ -37,5 +56,6 @@
     {{ partial "footer_highlightjs" . }}
     {{ partial "footer_mathjax" . }}
     {{ template "_internal/google_analytics.html" . }}
+    {{ template "_internal/disqus.html" . }}
   </body>
 </html>

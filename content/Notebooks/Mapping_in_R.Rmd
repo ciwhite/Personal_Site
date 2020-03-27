@@ -9,8 +9,8 @@ tags:
   - Mapping
   - R Markdown
 output:
-  html_document:
-    df_print: paged
+  blogdown::html_page:
+    toc: true
 ---
 
 ```{r echo=FALSE}

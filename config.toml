@@ -49,7 +49,10 @@ enableEmoji = true
 
     # path to the favicon, under "static"
     favicon = "favicon.ico"
-
+    
+    #to allow people to send merge (pull) requests and edit a page.
+    GithubEdit = "https://github.com/ciwhite/Personal_Site/edit/master/content/"
+    
     [params.logo]
     url = "profile.jpg"
     width = 50
@@ -77,3 +80,4 @@ enableEmoji = true
     height = 50
     alt = "Gmail"
     weight = 3
+ 

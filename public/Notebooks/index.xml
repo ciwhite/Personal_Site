@@ -17,9 +17,9 @@
       <pubDate>Thu, 26 Mar 2020 00:00:00 +0000</pubDate>
       
       <guid>/notebooks/mapping_in_r/</guid>
-      <description>Reading time: 13 minute(s) @ 200 WPM.
+      <description>Irish COVID 19 Intertactive MapAimShapefilesCovid dataUsing ggplot to make mapsCreating Thematic MapsAnimated MapsUsing LeafletReading time: 13 minute(s) @ 200 WPM.
 A note: if you are reading this on Rpubs, the links will only work is you Control Click.
-Irish COVID 19 Intertactive MapAimTo create a map that tracks the spread of COVID 19 in Ireland as the pandemic progresses. It is meant as a public educational tool and data will be collected from various sources, such as those cited in the Wiki page on COVID 19 in Ireland, and also health statistics which the HSE have recentrly started to publish on a county by county level.</description>
+Irish COVID 19 Intertactive MapAimTo create a map that tracks the spread of COVID 19 in Ireland as the pandemic progresses.</description>
     </item>
     
     <item>
