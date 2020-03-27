@@ -30,7 +30,6 @@
           <li>
             <a href="{{ .Site.RSSLink | relURL }}" type="application/rss+xml" target="_blank">RSS feed</a>
           </li>
-             <li>
           {{ if .File.Path }}
           
 {{ $.Scratch.Set "FilePath" (replace ($.Scratch.Get "FilePath") "\\" "/") }}
@@ -48,11 +47,13 @@
 {{ end }}
 
 {{ end }}
-        </li>
         </ul>
         <ul class="footer-links">
           <li>
             <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
+          </li>
+          <li>
+            <a href="https://bookdown.org/yihui/blogdown/" class="footer-links-kudos">Written in <img src="{{ "images/blogdown.png" | relURL }}" alt="Img link to Blogdown website" width="22" height="22"></a>
           </li>
         </ul>
       </footer>
