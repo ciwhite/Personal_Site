@@ -326,6 +326,7 @@ code {
 
   .footer-links {
     font-size: inherit;
+    float: none;
   }
 }
 

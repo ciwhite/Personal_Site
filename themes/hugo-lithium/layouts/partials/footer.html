@@ -1,9 +1,6 @@
       <footer class="footer">
         <ul class="footer-links">
-          <li>
-            <a href="{{ .Site.RSSLink | relURL }}" type="application/rss+xml" target="_blank">RSS feed</a>
-          </li>
-          <li>
+          
                 <a href="https://twitter.com/Cian_De_Faoiche" class="footer-links-kudos">
     <img src="{{ print "images/" .Site.Params.twitter.url | relURL }}"
          width="{{ .Site.Params.twitter.width }}"
@@ -27,6 +24,10 @@
          alt="{{ .Site.Params.gmail.alt }}">
           </a>
           </li>
+          <li>
+            <a href="{{ .Site.RSSLink | relURL }}" type="application/rss+xml" target="_blank">RSS feed</a>
+          </li>
+          <li>
           <li>
             <a href="https://gohugo.io/" class="footer-links-kudos">Made with <img src="{{ "images/hugo-logo.png" | relURL }}" alt="Img link to Hugo website" width="22" height="22"></a>
           </li>

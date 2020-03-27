@@ -62,22 +62,22 @@ enableEmoji = true
 
 [params.github]
     url = "github.png"
-    width = 50
-    height = 50
+    width = 30
+    height = 30
     alt = "GitHub Link"
     weight = 1
     
 [params.twitter]
     url = "twitter.png"
-    width = 50
-    height = 50
+    width = 30
+    height = 30
     alt = "Twitter Link"
     weight = 2
     
 [params.gmail]
     url = "gmail.png"
-    width = 50
-    height = 50
+    width = 30
+    height = 30
     alt = "Gmail"
     weight = 3
  
